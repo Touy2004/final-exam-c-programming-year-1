@@ -2,6 +2,7 @@
 #include <time.h>
 
 #define MAX_EMPLOYEES 100
+int employeeId;
 
 struct Employee {
     char name[50];
@@ -16,9 +17,48 @@ int employeeCount = 0;
 // Function prototypes
 void loadEmployeesFromFile();
 void saveEmployeesToFile();
-void addEmployee();
-void recordCheckout(int employeeId);
-void displayEmployee(int employeeId);
+void recordCheckin();
+void recordCheckout();
+void displayEmployee();
+
+void main() {
+    loadEmployeesFromFile();
+    int choice;
+
+    do {
+        printf("\nHR Management System\n");
+        printf("1. Record Check-in\n");
+        printf("2. Record Check-out\n");
+        printf("3. Display Employee\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+
+        switch (choice) {
+            case 1:
+                recordCheckin();
+                break;
+            case 2:
+                printf("Enter employee ID: ");
+                scanf("%d", &employeeId);
+                recordCheckout();
+                break;
+            case 3:
+                printf("Enter employee ID: ");
+                scanf("%d", &employeeId);
+                displayEmployee();
+                break;
+            case 4:
+                printf("Exiting the program.\n");
+                break;
+            default:
+                printf("Invalid choice.\n");
+                break;
+        }
+    } while (choice != 4);
+
+}
 
 void loadEmployeesFromFile() {
     FILE *file = fopen("employees.csv", "r");
@@ -49,7 +89,7 @@ void saveEmployeesToFile() {
     fclose(file);
 }
 
-void addEmployee() {
+void recordCheckin() {
     if (employeeCount >= MAX_EMPLOYEES) {
         printf("Maximum employee limit reached.\n");
         return;
@@ -69,7 +109,7 @@ void addEmployee() {
     saveEmployeesToFile();
 }
 
-void recordCheckout(int employeeId) {
+void recordCheckout() {
     for (int i = 0; i < employeeCount; i++) {
         if (employees[i].id == employeeId) {
             time(&employees[i].checkout_time);
@@ -81,7 +121,7 @@ void recordCheckout(int employeeId) {
     printf("Employee ID not found.\n");
 }
 
-void displayEmployee(int employeeId) {
+void displayEmployee() {
     for (int i = 0; i < employeeCount; i++) {
         if (employees[i].id == employeeId) {
             printf("Employee Name: %s\n", employees[i].name);
@@ -96,50 +136,4 @@ void displayEmployee(int employeeId) {
         }
     }
     printf("Employee ID not found.\n");
-}
-
-
-int main() {
-    loadEmployeesFromFile();
-
-    int choice;
-    int employeeId;
-    char newline;  // To consume the newline character
-
-    do {
-        printf("\nHR Management System\n");
-        printf("1. Add Employee\n");
-        printf("2. Record Check-out\n");
-        printf("3. Display Employee\n");
-        printf("4. Exit\n");
-        printf("Enter your choice: ");
-        scanf("%d", &choice);
-
-        // Consume the newline character
-        scanf("%c", &newline);
-
-        switch (choice) {
-            case 1:
-                addEmployee();
-                break;
-            case 2:
-                printf("Enter employee ID: ");
-                scanf("%d", &employeeId);
-                recordCheckout(employeeId);
-                break;
-            case 3:
-                printf("Enter employee ID: ");
-                scanf("%d", &employeeId);
-                displayEmployee(employeeId);
-                break;
-            case 4:
-                printf("Exiting the program.\n");
-                break;
-            default:
-                printf("Invalid choice.\n");
-                break;
-        }
-    } while (choice != 4);
-
-    return 0;
 }
